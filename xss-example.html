@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title></title>
+        <link href="css/style.css" rel="stylesheet" />
+    </head>
+    <style>
+        body {
+            min-height: 100dvh;
+            min-width: 100dvw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .feed {
+            width: 50dvw;
+            display: flex;
+            flex-direction: column;
+        }
+        .post.post--my {
+            align-self: end;
+        }
+        .post--my .post__user {
+            text-align: right;
+        }
+    </style>
+    <body>
+        <h1>Чат</h1>
+        <div class="feed"></div>
+        <form>
+            <input id="chat-box" type="" name="" value="" />
+            <button class="btn" type="">Отправить</button>
+        </form>
+        <form>
+            <input id="chat-box-2" type="" name="" value="" />
+            <button class="btn-2" type="">Отправить как Samantha</button>
+        </form>
+    </body>
+    <script>
+        var posts = localStorage.getItem('posts')
+        const init = () => {
+            posts = [
+                {
+                    user: 'Samantha',
+                    body: 'Вот скажи если муж чистит ногти отверткой, можно назвать его дебилом?',
+                    mine: false,
+                },
+                {
+                    user: 'John Doe',
+                    body: 'Ну если только отвертка крестовая!',
+                    mine: true,
+                },
+                {
+                    user: 'Samantha',
+                    body: 'Еще один...',
+                    mine: false,
+                },
+            ]
+            localStorage.setItem('posts', JSON.stringify(posts))
+        }
+
+        if (posts === null) {
+            init()
+        } else {
+            posts = JSON.parse(posts)
+        }
+
+        document.cookie = 'username=John Doe'
+        document.cookie = 'password=1 W0N7 83 H4CK3D'
+        const chatBox = document.querySelector('#chat-box')
+        const chatBox2 = document.querySelector('#chat-box-2')
+        const feed = document.querySelector('.feed')
+        const btn = document.querySelector('.btn')
+        const btn2 = document.querySelector('.btn-2')
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`
+            const parts = value.split(`; ${name}=`)
+            if (parts.length === 2) return parts.pop().split(';').shift()
+        }
+
+        const renderPosts = () =>
+            (feed.innerHTML = posts
+                .map(({ user, body, mine }) => {
+                    return `
+<div class="post ${mine ? 'post--my' : 'post-others'}">
+                    <h5 class="post__user">${mine ? getCookie('username') : 'Samantha'}</h5>
+                    <p class="post__body">${body}</p>
+                </div>`
+                })
+                .join(''))
+
+        renderPosts()
+
+        btn.addEventListener('click', (e) => {
+            e.preventDefault()
+            posts.push({ user: 'John Doe', body: chatBox.value, mine: true })
+            localStorage.setItem('posts', JSON.stringify(posts))
+            renderPosts()
+        })
+
+        btn2.addEventListener('click', (e) => {
+            e.preventDefault()
+            posts.push({ user: 'Samantha', body: chatBox2.value, mine: false })
+            localStorage.setItem('posts', JSON.stringify(posts))
+            renderPosts()
+        })
+    </script>
+</html>
+<!--<img src=x onerror="alert('Y0UV3 833N H4CK3D')";>-->
+<!--<img src=x onerror="fetch('password.txt') .then((response) => response.text()) .then((data) => { alert(data) })";>-->
+<!--<img src=x onerror="alert(document.cookie)";>-->
+<!--<img src=x onerror="document.cookie='username=c00l-h4ck3r';">-->
+<!--<img-->
+<!--    src="x"-->
+<!--    onerror="document.querySelector('.btn-2').addEventListener('click', () => {alert(document.querySelector('#chat-box-2').value)})" />-->
