@@ -36,21 +36,252 @@
                     </section>
                     <section>
                         <h1>Межсайтовый скриптинг</h1>
-                        <p>тип уязвимости в веб-приложениях, который позволяет злоумышленникам внедрять в веб-страницы вредоносные скрипты</p>
+                        <p>
+                            тип уязвимости в веб-приложениях, который позволяет
+                            злоумышленникам внедрять в веб-страницы вредоносные
+                            скрипты
+                        </p>
                         <pre><code data-trim data-noescape data-line-numbers class="html">
 &lt;img src=x onerror="alert('Y0UV3 833N H4CK3D')";&gt;
                         </code></pre>
                     </section>
+                    <section>
+                        <h1>Классификация XSS-атак</h1>
+                        <h4>Хранимый XSS</h4>
+                        <p>
+                            скрипт сохраняется на сервере, например, в базе
+                            данных или в виде комментария/поста на веб-странице
+                        </p>
+                        <hr />
+                        <h4>Отраженный XSS</h4>
+                        <p>
+                            скрипт внедряется через URL или другой параметр
+                            запроса и немедленно отражается сервером обратно в
+                            ответе
+                        </p>
+                        <hr />
+                        <h4>DOM-based XSS</h4>
+                        <p>
+                            атака происходит на стороне клиента, где манипуляции
+                            с Document Object Model (DOM) в браузере приводят к
+                            выполнению вредоносного кода
+                        </p>
+                    </section>
+                    <section>
+                        <h1>Для чего используют XSS</h1>
+                        <h4>Кража данных и учетных записей</h4>
+                        <p>
+                            кража пользовательских данных, таких как куки,
+                            токены сессий или другие учетные данные
+                        </p>
+                        <hr />
+                        <h4>Фишинг и перенаправление на вредоносные сайты</h4>
+                        <p>
+                            скрипты могут перенаправлять пользователей на
+                            поддельные веб-страницы, маскирующиеся под
+                            легитимные
+                        </p>
+                        <hr />
+                        <h4>Изменение контента страницы (дефейсинг)</h4>
+                        <p>
+                            изменения отображаемого на странице контента, что
+                            может привести к дефейсингу сайта
+                        </p>
+                        <h4>Распространение вредоносного ПО</h4>
+                        <p>
+                            скрипты могут заставить браузер жертвы автоматически
+                            загружать и устанавливать вредоносное программное
+                            обеспечение
+                        </p>
+                    </section>
+                    <section>
+                        <h1>отраженная XSS-атака</h1>
+                        <p>
+                            тип атаки, при которой вредоносный скрипт внедряется
+                            в запрос к серверу и немедленно возвращается в
+                            ответе от сервера, исполняясь в браузере жертвы
+                        </p>
+                        <code class="plaintext">
+                            http://localhost:5000/greet?name=&lt;script&gt;alert('XSS')&lt;/script&gt;
+                        </code>
+                        <pre><code class="python"><script type="text/template">
+@app.route('/greet')
+def greet():
+    name = request.args.get('name', '')
+    template = f"<h1>Hello, {name}!</h1>"
+    return render_template_string(template)
+                        </script></code></pre>
+                    </section>
+                    <section>
+                        <h1>хранимая XSS-атака</h1>
+                        <p>
+                            вредоносный код сохраняется на стороне сервера и
+                            впоследствии исполняется в браузере любого
+                            пользователя, который загружает соответствующую
+                            веб-страницу
+                        </p>
+                        <pre><code class="html"><script type="text/template">
+<div class="post">
+    <script>alert('XSS');&lt;/script>
+</div>
+                        </script></code></pre>
+                    </section>
+                    <section>
+                        <h1>DOM-based XSS</h1>
+                        <p>
+                            тип межсайтового скриптинга, при котором уязвимость
+                            возникает в самом Document Object Model (DOM) на
+                            стороне клиента, а не на сервере
+                        </p>
+                    </section>
                 </section>
                 <section>
-                    <ul>
-                        <li>
-                            <a
-                                href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/XSS%20Injection">
-                                Набор полезной нагрузки XSS
-                            </a>
-                        </li>
-                    </ul>
+                    <section>
+                        <h1>Как работает XSS</h1>
+                        <h4>Клиент-серверная модель</h4>
+                        <p>
+                            Уязвимости XSS возникают, когда сервер или
+                            клиентская часть недостаточно проверяют вводимые
+                            пользователем данные
+                        </p>
+                        <pre><code class="html"><script type="text/template">
+<div class="post">
+    <script>alert('XSS');&lt;/script>
+</div>
+                        </script></code></pre>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h1>Механизмы обхода фильтров</h1>
+                        <p>
+                            приложения внедряют базовые фильтры для удаления
+                            скриптов или потенциально опасного контента из
+                            пользовательского ввода
+                        </p>
+                        <h4>URL-кодирование</h4>
+                        <p>
+                            злоумышленник может отправить закодированную строку,
+                            которая будет декодирована браузером
+                        </p>
+                        <pre><code class="html"><script type="text/template">
+<script>alert('XSS');тут-должна-быть-скобочка/script>
+                        </script></code></pre>
+                        <pre><code class="html"><script type="text/template">
+%3Cscript%3Ealert%28%27XSS%27%29%3C%2Fscript%3E
+                        </script></code></pre>
+                    </section>
+                    <section>
+                        <h1>Механизмы обхода фильтров</h1>
+                        <h4>Использование HTML-атрибутов</h4>
+                        <p>
+                            Вредоносные скрипты можно внедрять в атрибуты
+                            HTML-элементов, таких как onmouseover, onclick, и
+                            другие
+                        </p>
+                        <pre><code class="html"><script type="text/template">
+<img src="image.jpg" onerror="alert('XSS');">
+                        </script></code></pre>
+                    </section>
+                    <section>
+                        <h1>Механизмы обхода фильтров</h1>
+                        <h4>Закрытие существующего тега</h4>
+                        <pre><code class="html"><script type="text/template">
+<div>User comment: <b>Great product!"></b><script>alert('XSS');скобочка/script></div>
+                        </script></code></pre>
+                    </section>
+                    <section>
+                        <h1>Механизмы обхода фильтров</h1>
+                        <h4>Изменение контекста исполнения</h4>
+                        <p>
+                            Злоумышленники могут изменять контекст выполнения
+                            скрипта, например, внедряя вредоносный код в другие
+                            части страницы, такие как CSS
+                        </p>
+                        <pre><code class="html"><script type="text/template">
+<style>body {background: url("javascript:alert('XSS')");}</style>
+                        </script></code></pre>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h1>Случаи применения XSS</h1>
+                        <h4>Samy Worm</h4>
+                        <p>
+                            скрипт добавлял других пользователей в друзья Samy,
+                            а также внедрял сам себя в их профили
+                        </p>
+                        <img
+                            src="https://upload.wikimedia.org/wikipedia/en/thumb/c/c2/SamyIsMyHero.png/220px-SamyIsMyHero.png"
+                            class="r-stretch"
+                            alt="" />
+                        <div class="border-r">
+                            Самый быстро развивающийся червь
+                        </div>
+                    </section>
+                    <section>
+                        <h1>Случаи применения XSS</h1>
+                        <h4>OnMouseOver XSS</h4>
+                        <p>
+                            Уязвимость позволила пользователям добавлять
+                            вредоносные скрипты в свои твиты. Когда другие
+                            пользователи наводили курсор на такие твиты
+                            (срабатывал JavaScript-событие onmouseover),
+                            выполнялись скрипты
+                        </p>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h1>Методы защиты от XSS</h1>
+                        <h4>Очистка (sanitization)</h4>
+                        <p>
+                            процесс проверки и фильтрации пользовательского
+                            ввода, чтобы убедиться, что введенные данные не
+                            содержат вредоносного кода
+                        </p>
+                    </section>
+                    <section>
+                        <h1>Методы защиты от XSS</h1>
+                        <h4>Экранирование данных</h4>
+                        <p>
+                            процесс превращения специальных символов в их
+                            безопасные аналоги, чтобы они не интерпретировались
+                            как код
+                        </p>
+                        <pre><code class="html"><script type="text/template">
+& lt;script& gt; вместо <script>
+                        </script></code></pre>
+                    </section>
+                    <section>
+                        <h1>Методы защиты от XSS</h1>
+                        <h4>
+                            Использование безопасных методов работы с DOM в
+                            JavaScript
+                        </h4>
+                        <p>
+                            Вместо использования innerHTML, которое может
+                            исполнять скрипты, следует использовать безопасные
+                            методы, такие как textContent или innerText, которые
+                            вставляют данные как текст, не исполняя их
+                        </p>
+                        <code class="javascript">
+                            document.getElementById('element').textContent =
+                            user_input;
+                        </code>
+                    </section>
+                    <section>
+                        <h1>Методы защиты от XSS</h1>
+                        <h4>Использование Content Security Policy (CSP)</h4>
+                        <p>
+                            механизм, который позволяет веб-разработчикам
+                            контролировать, откуда браузер может загружать и
+                            исполнять ресурсы (скрипты, стили, изображения).
+                        </p>
+                        <pre><code class="html"><script type="text/template">
+Content-Security-Policy: default-src 'self'; script-src 'self' https://trusted-scripts.com;
+                        </script></code></pre>
+                    </section>
                 </section>
             </div>
         </div>
